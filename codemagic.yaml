@@ -4,9 +4,14 @@ workflows:
     max_build_duration: 60
     environment:
       node: latest
+      java: 17
+      android:
+        image: default
     scripts:
-      - npm install
-      - npx cap sync android
+      - rm -rf node_modules
+      - npm ci || npm install
+      - npx --yes @capacitor/cli@latest sync android
+      - chmod +x android/gradlew
       - cd android
       - ./gradlew assembleDebug
     artifacts:

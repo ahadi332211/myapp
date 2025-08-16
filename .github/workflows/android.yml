@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APKs (Debug & Release)
 
 on:
   workflow_dispatch:
@@ -39,12 +39,14 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x android/gradlew
 
-      - name: Build debug APK
+      - name: Build Debug & Release APKs
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug assembleRelease
 
-      - name: Upload APK artifact
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
-          path: android/app/build/outputs/apk/**/*.apk
+          name: apk-outputs
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk

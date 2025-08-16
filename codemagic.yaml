@@ -2,19 +2,18 @@ workflows:
   android-workflow:
     name: Build Android APK
     max_build_duration: 60
-    instance_type: linux_x2
     environment:
       java: 17
       node: 20
     scripts:
       - rm -rf node_modules
       - npm ci || npm install
-      # Ensure we use the CLI directly from npm, not the local shim
-      - npx --yes @capacitor/cli@latest --version
-      # Create Android project on CI if it's not in the repo
-      - if [ ! -d android ]; then npx --yes @capacitor/cli@latest add android; fi
-      - npx --yes @capacitor/cli@latest copy android
-      - npx --yes @capacitor/cli@latest sync android
+      # Use Capacitor CLI directly via npx to avoid local shim/permissions
+      - npx --yes @capacitor/cli@7.4.2 --version
+      # Create android project on CI if it's not in the repo
+      - if [ ! -d android ]; then npx --yes @capacitor/cli@7.4.2 add android; fi
+      - npx --yes @capacitor/cli@7.4.2 copy android
+      - npx --yes @capacitor/cli@7.4.2 sync android
       - chmod +x android/gradlew
       - cd android
       - ./gradlew assembleDebug
